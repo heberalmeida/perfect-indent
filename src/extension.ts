@@ -19,18 +19,40 @@ export function activate(context: vscode.ExtensionContext) {
         // If URI is provided (from context menu), open that document
         if (targetUri) {
             try {
-                // Check if it's a file (not a folder)
-                const stat = await vscode.workspace.fs.stat(targetUri);
-                if (stat.type === vscode.FileType.Directory) {
-                    vscode.window.showWarningMessage("Please select a file, not a folder.");
-                    return;
+                // Check if it's a file (not a folder) - but don't fail if check fails
+                try {
+                    const stat = await vscode.workspace.fs.stat(targetUri);
+                    if (stat.type === vscode.FileType.Directory) {
+                        vscode.window.showWarningMessage("Please select a file, not a folder.");
+                        return;
+                    }
+                } catch (statError) {
+                    // If stat fails, continue anyway - might be a file that doesn't exist yet
                 }
                 
                 document = await vscode.workspace.openTextDocument(targetUri);
-                editor = await vscode.window.showTextDocument(document, { preview: false });
-            } catch (error) {
-                vscode.window.showErrorMessage(`Failed to open file: ${error}`);
-                return;
+                editor = await vscode.window.showTextDocument(document, { 
+                    preview: false,
+                    preserveFocus: false 
+                });
+            } catch (error: any) {
+                // If opening fails, try to get the editor if file is already open
+                const uriToCheck = targetUri;
+                if (uriToCheck) {
+                    const openEditor = vscode.window.visibleTextEditors.find(
+                        e => e.document.uri.toString() === uriToCheck.toString()
+                    );
+                    if (openEditor) {
+                        editor = openEditor;
+                        document = openEditor.document;
+                    } else {
+                        vscode.window.showErrorMessage(`Failed to open file: ${error?.message || error}`);
+                        return;
+                    }
+                } else {
+                    vscode.window.showErrorMessage(`Failed to open file: ${error?.message || error}`);
+                    return;
+                }
             }
         } else {
             // Try to get active text editor first
@@ -95,6 +117,12 @@ export function activate(context: vscode.ExtensionContext) {
             }
             
             document = editor.document;
+        }
+        
+        // Ensure we have both editor and document
+        if (!editor || !document) {
+            vscode.window.showWarningMessage("Unable to access file editor. Please try again.");
+            return;
         }
         
         // Check if document is read-only
