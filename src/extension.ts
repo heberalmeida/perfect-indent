@@ -25,23 +25,58 @@ export function activate(context: vscode.ExtensionContext) {
                 return;
             }
         } else {
-            // Try to get active text editor
+            // Try to get active text editor first
             editor = vscode.window.activeTextEditor;
             
-            // If no active editor, try to get from visible editors
-            if (!editor && vscode.window.visibleTextEditors.length > 0) {
-                editor = vscode.window.visibleTextEditors[0];
-            }
-            
-            // If still no editor, try to get from active tab group
+            // If no active editor, try to get from active tab group (when clicking on file tab)
             if (!editor) {
                 const activeTab = vscode.window.tabGroups.activeTabGroup.activeTab;
                 if (activeTab && activeTab.input instanceof vscode.TabInputText) {
                     try {
                         document = await vscode.workspace.openTextDocument(activeTab.input.uri);
-                        editor = await vscode.window.showTextDocument(document);
+                        editor = await vscode.window.showTextDocument(document, { 
+                            preview: false,
+                            preserveFocus: false 
+                        });
                     } catch (error) {
                         // Ignore error, continue with fallback
+                    }
+                }
+            }
+            
+            // If still no editor, try to get from visible editors
+            if (!editor && vscode.window.visibleTextEditors.length > 0) {
+                // Try to find editor that matches active tab
+                const activeTab = vscode.window.tabGroups.activeTabGroup.activeTab;
+                if (activeTab && activeTab.input instanceof vscode.TabInputText) {
+                    const tabInput = activeTab.input as vscode.TabInputText;
+                    editor = vscode.window.visibleTextEditors.find(
+                        e => e.document.uri.toString() === tabInput.uri.toString()
+                    );
+                }
+                
+                // If still not found, use first visible editor
+                if (!editor) {
+                    editor = vscode.window.visibleTextEditors[0];
+                }
+            }
+            
+            // Last resort: try to open any text document from tabs
+            if (!editor) {
+                const allTabs = vscode.window.tabGroups.all
+                    .flatMap(group => group.tabs)
+                    .filter(tab => tab.input instanceof vscode.TabInputText)
+                    .map(tab => (tab.input as vscode.TabInputText).uri);
+                
+                if (allTabs.length > 0) {
+                    try {
+                        document = await vscode.workspace.openTextDocument(allTabs[0]);
+                        editor = await vscode.window.showTextDocument(document, { 
+                            preview: false,
+                            preserveFocus: false 
+                        });
+                    } catch (error) {
+                        // Ignore error
                     }
                 }
             }

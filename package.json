@@ -32,7 +32,7 @@
       "editor/title": [
         {
           "command": "perfectIndent.fix",
-          "when": "editorTextFocus || !editorReadonly",
+          "when": "!editorReadonly",
           "group": "navigation"
         }
       ],
