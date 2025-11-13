@@ -15,7 +15,11 @@
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
-      { "command": "perfectIndent.fix", "title": "Perfect Indent: Fix indentation" }
+      { 
+        "command": "perfectIndent.fix", 
+        "title": "Perfect Indent",
+        "icon": "$(indent)"
+      }
     ],
     "keybindings": [
       {
@@ -23,7 +27,30 @@
         "key": "ctrl+shift+i",
         "mac": "cmd+shift+i"
       }
-    ]
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "perfectIndent.fix",
+          "when": "editorTextFocus || !editorReadonly",
+          "group": "navigation"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "perfectIndent.fix",
+          "when": "editorTextFocus",
+          "group": "1_modification"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "perfectIndent.fix",
+          "when": "resourceLangId != ''",
+          "group": "1_modification"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run build",

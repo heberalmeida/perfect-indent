@@ -1,21 +1,58 @@
 import * as vscode from "vscode";
 
 export function activate(context: vscode.ExtensionContext) {
-    let fixIndentCommand = vscode.commands.registerCommand("perfectIndent.fix", async () => {
-        // Try to get active text editor
-        let editor = vscode.window.activeTextEditor;
+    let fixIndentCommand = vscode.commands.registerCommand("perfectIndent.fix", async (uri?: vscode.Uri | vscode.Uri[]) => {
+        let editor: vscode.TextEditor | undefined;
+        let document: vscode.TextDocument;
         
-        // If no active editor, try to get from visible editors
-        if (!editor && vscode.window.visibleTextEditors.length > 0) {
-            editor = vscode.window.visibleTextEditors[0];
+        // Handle URI from context menu (can be single URI or array)
+        let targetUri: vscode.Uri | undefined;
+        if (uri) {
+            if (Array.isArray(uri)) {
+                targetUri = uri[0]; // Use first URI if array
+            } else {
+                targetUri = uri;
+            }
         }
         
-        if (!editor) {
-            vscode.window.showWarningMessage("Please open a file to fix indentation.");
-            return;
+        // If URI is provided (from context menu), open that document
+        if (targetUri) {
+            try {
+                document = await vscode.workspace.openTextDocument(targetUri);
+                editor = await vscode.window.showTextDocument(document, { preview: false });
+            } catch (error) {
+                vscode.window.showErrorMessage(`Failed to open file: ${error}`);
+                return;
+            }
+        } else {
+            // Try to get active text editor
+            editor = vscode.window.activeTextEditor;
+            
+            // If no active editor, try to get from visible editors
+            if (!editor && vscode.window.visibleTextEditors.length > 0) {
+                editor = vscode.window.visibleTextEditors[0];
+            }
+            
+            // If still no editor, try to get from active tab group
+            if (!editor) {
+                const activeTab = vscode.window.tabGroups.activeTabGroup.activeTab;
+                if (activeTab && activeTab.input instanceof vscode.TabInputText) {
+                    try {
+                        document = await vscode.workspace.openTextDocument(activeTab.input.uri);
+                        editor = await vscode.window.showTextDocument(document);
+                    } catch (error) {
+                        // Ignore error, continue with fallback
+                    }
+                }
+            }
+            
+            if (!editor) {
+                vscode.window.showWarningMessage("Please open a file to fix indentation.");
+                return;
+            }
+            
+            document = editor.document;
         }
-
-        const document = editor.document;
         
         // Check if document is read-only
         if (document.isUntitled) {
