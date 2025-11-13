@@ -6,6 +6,7 @@ export function activate(context: vscode.ExtensionContext) {
         let document: vscode.TextDocument;
         
         // Handle URI from context menu (can be single URI or array)
+        // VS Code automatically passes resourceUri when called from explorer/context
         let targetUri: vscode.Uri | undefined;
         if (uri) {
             if (Array.isArray(uri)) {
@@ -18,6 +19,13 @@ export function activate(context: vscode.ExtensionContext) {
         // If URI is provided (from context menu), open that document
         if (targetUri) {
             try {
+                // Check if it's a file (not a folder)
+                const stat = await vscode.workspace.fs.stat(targetUri);
+                if (stat.type === vscode.FileType.Directory) {
+                    vscode.window.showWarningMessage("Please select a file, not a folder.");
+                    return;
+                }
+                
                 document = await vscode.workspace.openTextDocument(targetUri);
                 editor = await vscode.window.showTextDocument(document, { preview: false });
             } catch (error) {
