@@ -21,8 +21,7 @@
       {
         "command": "perfectIndent.fix",
         "key": "ctrl+shift+i",
-        "mac": "cmd+shift+i",
-        "when": "editorTextFocus"
+        "mac": "cmd+shift+i"
       }
     ]
   },

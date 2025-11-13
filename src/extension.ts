@@ -2,13 +2,27 @@ import * as vscode from "vscode";
 
 export function activate(context: vscode.ExtensionContext) {
     let fixIndentCommand = vscode.commands.registerCommand("perfectIndent.fix", async () => {
-        const editor = vscode.window.activeTextEditor;
+        // Try to get active text editor
+        let editor = vscode.window.activeTextEditor;
+        
+        // If no active editor, try to get from visible editors
+        if (!editor && vscode.window.visibleTextEditors.length > 0) {
+            editor = vscode.window.visibleTextEditors[0];
+        }
+        
         if (!editor) {
-            vscode.window.showWarningMessage("No active editor found.");
+            vscode.window.showWarningMessage("Please open a file to fix indentation.");
             return;
         }
 
         const document = editor.document;
+        
+        // Check if document is read-only
+        if (document.isUntitled) {
+            vscode.window.showWarningMessage("Please save the file before fixing indentation.");
+            return;
+        }
+        
         const text = document.getText();
         const languageId = document.languageId;
 
