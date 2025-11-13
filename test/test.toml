@@ -1,0 +1,24 @@
+# TOML - Mal indentado propositalmente
+title = "Test Application"
+version = "1.0.0"
+[server]
+host = "localhost"
+port = 3000
+timeout = 30
+[database]
+host = "localhost"
+port = 5432
+name = "testdb"
+[features]
+auth = true
+logging = true
+cache = false
+[[users]]
+id = 1
+name = "John"
+email = "john@test.com"
+[[users]]
+id = 2
+name = "Jane"
+email = "jane@test.com"
+

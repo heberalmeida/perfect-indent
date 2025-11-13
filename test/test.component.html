@@ -1,0 +1,37 @@
+<!-- Angular Template - Mal indentado propositalmente -->
+<div class="user-list-container">
+<h1>User List</h1>
+<div *ngIf="loading" class="loading">
+<p>Loading users...</p>
+</div>
+<div *ngIf="!loading">
+<div *ngIf="users.length > 0; else noUsers">
+<table class="table">
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Email</th>
+<th>Actions</th>
+</tr>
+</thead>
+<tbody>
+<tr *ngFor="let user of users; trackBy: trackByUserId">
+<td>{{ user.id }}</td>
+<td>{{ user.name }}</td>
+<td>{{ user.email }}</td>
+<td>
+<button (click)="deleteUser(user.id)" class="btn-danger">
+Delete
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<ng-template #noUsers>
+<p class="no-users">No users found.</p>
+</ng-template>
+</div>
+</div>
+

@@ -6,13 +6,13 @@ Perfect Indent analyzes your code structure and automatically corrects broken in
 
 ![Perfect Indent](src/image/perfect-ident.png)
 
-## ⭐ Features
+## Features
 
 - Fix indentation with one command  
 
 - Detects tab/spaces automatically  
 
-- Works with HTML, JS, TS, Vue, React, PHP, Python, JSON, etc.  
+- Works with **30+ languages** including HTML, JS, TS, Vue, React, PHP, Python, JSON, CSS, YAML, XML, and more  
 
 - Smart block-based indentation  
 
@@ -20,7 +20,7 @@ Perfect Indent analyzes your code structure and automatically corrects broken in
 
 - Ultra lightweight (no dependencies)
 
-## 🚀 Usage
+## Usage
 
 Press:
 
@@ -32,7 +32,7 @@ or run:
 
 **Perfect Indent: Fix indentation**
 
-## 💡 Perfect for
+## Perfect for
 
 - Messy pasted code  
 
@@ -44,7 +44,52 @@ or run:
 
 - Legacy files
 
-## 🛠️ Roadmap
+## Supported Languages
+
+Perfect Indent works with any language that uses block-based indentation:
+
+### Web Technologies
+- **HTML** / **XHTML** / **XML**
+- **Vue** (`.vue` files with template, script, style)
+- **Angular** (`.component.ts`, `.component.html`, `.module.ts`, `.service.ts`, `.routing.ts`)
+- **React** / **JSX**
+- **JavaScript** (`.js`, `.mjs`, `.cjs`)
+- **TypeScript** (`.ts`, `.tsx`)
+- **CSS** / **SCSS** / **SASS** / **LESS**
+- **JSON** / **JSON5**
+
+### Backend Languages
+- **Python** (`.py`)
+- **PHP** (`.php`, `.phtml`)
+- **Ruby** (`.rb`)
+- **Go** (`.go`)
+- **Rust** (`.rs`)
+- **Java** (`.java`)
+- **C/C++** (`.c`, `.cpp`, `.h`)
+- **C#** (`.cs`)
+
+### Configuration & Data
+- **YAML** (`.yaml`, `.yml`)
+- **TOML** (`.toml`)
+- **INI** (`.ini`)
+- **Markdown** (`.md`, `.markdown`)
+
+### Template Engines
+- **Blade** (Laravel)
+- **Twig** (Symfony)
+- **Jinja2** (Python)
+- **EJS** / **Handlebars**
+
+### Other
+- **Shell Scripts** (`.sh`, `.bash`, `.zsh`)
+- **SQL** (`.sql`)
+- **Lua** (`.lua`)
+- **Perl** (`.pl`)
+- **Swift** (`.swift`)
+- **Kotlin** (`.kt`)
+- And many more!
+
+## Roadmap
 
 ### v1.0
 

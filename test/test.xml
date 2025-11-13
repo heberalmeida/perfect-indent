@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+<metadata>
+<author>Test Author</author>
+<version>1.0</version>
+</metadata>
+<content>
+<section id="main">
+<title>Main Section</title>
+<paragraph>
+This is a test paragraph with nested elements.
+<emphasis>Important text</emphasis>
+</paragraph>
+</section>
+<section id="footer">
+<links>
+<link href="/home">Home</link>
+<link href="/about">About</link>
+</links>
+</section>
+</content>
+</root>
+

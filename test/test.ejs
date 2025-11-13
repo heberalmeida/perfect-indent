@@ -1,0 +1,30 @@
+<%# EJS - Mal indentado propositalmente -%>
+<!DOCTYPE html>
+<html>
+<head>
+<title><%= title %></title>
+</head>
+<body>
+<div class="container">
+<h1><%= title %></h1>
+<% if (users && users.length > 0) { %>
+<ul>
+<% users.forEach(function(user) { %>
+<li>
+<%= user.name %>
+<% if (user.isAdmin) { %>
+<span class="badge">Admin</span>
+<% } %>
+</li>
+<% }); %>
+</ul>
+<% } else { %>
+<p>No users found.</p>
+<% } %>
+<% if (currentUser) { %>
+<button>Click me</button>
+<% } %>
+</div>
+</body>
+</html>
+

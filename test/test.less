@@ -1,0 +1,36 @@
+// LESS - Mal indentado propositalmente
+@primary-color: #333;
+@secondary-color: #666;
+.container {
+width: 100%;
+max-width: 1200px;
+margin: 0 auto;
+.header {
+background: @primary-color;
+color: white;
+padding: 20px;
+nav {
+ul {
+list-style: none;
+display: flex;
+li {
+margin-right: 20px;
+a {
+color: white;
+text-decoration: none;
+&:hover {
+color: #ff0;
+}
+}
+}
+}
+}
+}
+.content {
+padding: 20px;
+@media (max-width: 768px) {
+padding: 15px;
+}
+}
+}
+
