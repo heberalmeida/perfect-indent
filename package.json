@@ -46,8 +46,8 @@
       "explorer/context": [
         {
           "command": "perfectIndent.fix",
-          "when": "resourceLangId != ''",
-          "group": "1_modification"
+          "when": "explorerResourceIsFolder == false",
+          "group": "navigation@1"
         }
       ]
     }
