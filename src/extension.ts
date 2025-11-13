@@ -144,11 +144,12 @@ export function activate(context: vscode.ExtensionContext) {
             try {
                 const fixedText = fixMarkdownIndentation(text);
                 
-                // Prevent infinite loops: compare content hash
-                const originalHash = simpleHash(text);
-                const fixedHash = simpleHash(fixedText);
+                // Compare the actual text to see if indentation changed
+                // Normalize line endings for comparison
+                const normalizedOriginal = text.replace(/\r\n/g, '\n');
+                const normalizedFixed = fixedText.replace(/\r\n/g, '\n');
                 
-                if (originalHash === fixedHash) {
+                if (normalizedOriginal === normalizedFixed) {
                     vscode.window.showInformationMessage("Indentation is already correct!");
                     return;
                 }
@@ -177,11 +178,12 @@ export function activate(context: vscode.ExtensionContext) {
             const { indentChar, indentSize } = detectIndentation(text);
             const fixedText = fixIndentation(text, indentChar, indentSize);
 
-            // Prevent infinite loops: compare content hash instead of normalized text
-            const originalHash = simpleHash(text);
-            const fixedHash = simpleHash(fixedText);
+            // Compare the actual text (not hash) to see if indentation changed
+            // Normalize line endings for comparison
+            const normalizedOriginal = text.replace(/\r\n/g, '\n');
+            const normalizedFixed = fixedText.replace(/\r\n/g, '\n');
 
-            if (originalHash === fixedHash) {
+            if (normalizedOriginal === normalizedFixed) {
                 vscode.window.showInformationMessage("Indentation is already correct!");
                 return;
             }
