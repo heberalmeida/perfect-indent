@@ -418,8 +418,8 @@ function countClosingBlocks(line: string): number {
         count += leadingClosers[0].length;
     }
     
-    // Closing HTML/XML/Vue tags
-    if (/^<\/[^>]+>/.test(line)) {
+    // Closing HTML/XML/Vue tags (improved to match anywhere in line)
+    if (/<\/[^>]+>/.test(line)) {
         count++;
     }
     
@@ -456,21 +456,42 @@ function countOpeningBlocks(line: string, nextLine: string): number {
     }
     
     // HTML/XML/Vue opening tags (not self-closing, not closing tags, not comments)
-    // This includes Vue template, script, style tags and all HTML elements
-    const htmlTagMatch = line.match(/^<([a-zA-Z][a-zA-Z0-9-]*)[^>]*>$/);
-    if (htmlTagMatch && 
-        !line.endsWith("/>") && 
-        !line.startsWith("</") &&
-        !line.startsWith("<!--") &&
-        !line.match(/^<\?/) &&
-        !line.match(/^<!\[CDATA\[/)) {
-        // Don't count self-closing tags like <br>, <img>, etc. if they end with />
-        // But Vue components might be self-closing, so we check
-        const tagName = htmlTagMatch[1].toLowerCase();
-        const selfClosingTags = ['br', 'hr', 'img', 'input', 'meta', 'link', 'area', 'base', 'col', 'embed', 'source', 'track', 'wbr'];
-        if (!selfClosingTags.includes(tagName)) {
-            count++;
+    // Improved regex to match tags even with attributes on the same line
+    // Match opening tags like <div>, <div class="...">, etc.
+    const htmlTagRegex = /<([a-zA-Z][a-zA-Z0-9-]*)(?:\s[^>]*)?>/g;
+    let match;
+    let hasOpeningTag = false;
+    
+    while ((match = htmlTagRegex.exec(line)) !== null) {
+        const fullTag = match[0];
+        const tagName = match[1].toLowerCase();
+        
+        // Skip if it's a closing tag, comment, or special tag
+        if (fullTag.startsWith('</') || 
+            fullTag.includes('<!--') || 
+            fullTag.startsWith('<?') ||
+            fullTag.includes('<![')) {
+            continue;
         }
+        
+        // Skip self-closing tags
+        if (fullTag.endsWith('/>') || fullTag.includes('/>')) {
+            continue;
+        }
+        
+        // Skip known self-closing HTML tags
+        const selfClosingTags = ['br', 'hr', 'img', 'input', 'meta', 'link', 'area', 'base', 'col', 'embed', 'source', 'track', 'wbr'];
+        if (selfClosingTags.includes(tagName)) {
+            continue;
+        }
+        
+        // This is an opening tag that should increase indent
+        hasOpeningTag = true;
+        break; // Only count once per line
+    }
+    
+    if (hasOpeningTag) {
+        count++;
     }
     
     // JavaScript/Python keywords that open blocks

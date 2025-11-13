@@ -26,6 +26,11 @@
         "command": "perfectIndent.fix",
         "key": "ctrl+shift+i",
         "mac": "cmd+shift+i"
+      },
+      {
+        "command": "perfectIndent.fix",
+        "key": "alt+shift+i",
+        "mac": "alt+shift+i"
       }
     ],
     "menus": {
