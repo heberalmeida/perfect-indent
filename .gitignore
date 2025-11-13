@@ -2,4 +2,7 @@ out
 node_modules
 .vscode-test
 *.vsix
+*.js.map
+test/*.js
+test/*.js.map
 

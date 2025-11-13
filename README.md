@@ -44,7 +44,7 @@ or run:
 
 - Legacy files
 
-## Supported Languages
+    ## Supported Languages
 
 Perfect Indent works with any language that uses block-based indentation:
 

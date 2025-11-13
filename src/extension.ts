@@ -10,9 +10,44 @@ export function activate(context: vscode.ExtensionContext) {
 
         const document = editor.document;
         const text = document.getText();
+        const languageId = document.languageId;
 
         if (!text.trim()) {
             vscode.window.showInformationMessage("Document is empty.");
+            return;
+        }
+
+        // For Markdown, use minimal indentation (preserve list indentation only)
+        if (languageId === 'markdown') {
+            try {
+                const fixedText = fixMarkdownIndentation(text);
+                
+                // Prevent infinite loops: compare content hash
+                const originalHash = simpleHash(text);
+                const fixedHash = simpleHash(fixedText);
+                
+                if (originalHash === fixedHash) {
+                    vscode.window.showInformationMessage("Indentation is already correct!");
+                    return;
+                }
+
+                const fullRange = new vscode.Range(
+                    document.positionAt(0),
+                    document.positionAt(text.length)
+                );
+
+                const success = await editor.edit(edit => {
+                    edit.replace(fullRange, fixedText);
+                });
+
+                if (success) {
+                    vscode.window.showInformationMessage("Indentation fixed! ✓");
+                } else {
+                    vscode.window.showWarningMessage("Failed to apply indentation changes.");
+                }
+            } catch (error) {
+                vscode.window.showErrorMessage(`Error fixing indentation: ${error}`);
+            }
             return;
         }
 
@@ -20,11 +55,11 @@ export function activate(context: vscode.ExtensionContext) {
             const { indentChar, indentSize } = detectIndentation(text);
             const fixedText = fixIndentation(text, indentChar, indentSize);
 
-            // Normalize both texts for comparison (remove trailing whitespace)
-            const normalizedOriginal = text.split("\n").map(l => l.trimEnd()).join("\n");
-            const normalizedFixed = fixedText.split("\n").map(l => l.trimEnd()).join("\n");
+            // Prevent infinite loops: compare content hash instead of normalized text
+            const originalHash = simpleHash(text);
+            const fixedHash = simpleHash(fixedText);
 
-            if (normalizedFixed === normalizedOriginal) {
+            if (originalHash === fixedHash) {
                 vscode.window.showInformationMessage("Indentation is already correct!");
                 return;
             }
@@ -49,6 +84,55 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
     context.subscriptions.push(fixIndentCommand);
+}
+
+// Simple hash function to detect if content changed
+function simpleHash(text: string): string {
+    // Remove all whitespace and compare structure
+    return text.split("\n").map(l => l.trim()).join("\n");
+}
+
+// Minimal indentation fix for Markdown (only fixes list indentation)
+function fixMarkdownIndentation(text: string): string {
+    const lines = text.split("\n");
+    const newLines: string[] = [];
+    
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        const trimmed = line.trim();
+        
+        // Preserve empty lines
+        if (!trimmed) {
+            newLines.push("");
+            continue;
+        }
+        
+        // For markdown, preserve original indentation for lists and code blocks
+        // Only fix obvious indentation issues (multiple spaces at start)
+        const match = line.match(/^(\s*)(.*)$/);
+        if (match) {
+            const leadingSpaces = match[1];
+            const content = match[2];
+            
+            // If line starts with list marker, preserve minimal indentation
+            if (/^[-*+]\s/.test(content) || /^\d+\.\s/.test(content)) {
+                // List items: use 0 or 2 spaces max
+                const indentLevel = Math.min(leadingSpaces.length, 2);
+                newLines.push(" ".repeat(indentLevel) + content);
+            } else if (content.startsWith("```") || content.startsWith("~~~")) {
+                // Code block markers: no indent
+                newLines.push(content);
+            } else {
+                // Regular content: remove excessive leading spaces (keep max 2)
+                const indentLevel = Math.min(leadingSpaces.length, 2);
+                newLines.push(" ".repeat(indentLevel) + content);
+            }
+        } else {
+            newLines.push(line);
+        }
+    }
+    
+    return newLines.join("\n");
 }
 
 interface IndentationConfig {
@@ -236,6 +320,11 @@ function countOpeningBlocks(line: string, nextLine: string): number {
         return 0;
     }
     
+    // Don't count markdown list markers as opening blocks
+    if (/^[-*+]\s/.test(line) || /^\d+\.\s/.test(line)) {
+        return 0;
+    }
+    
     // Count opening braces, brackets, parentheses at the end
     const trailingOpeners = line.match(/[{\[\(]+$/);
     if (trailingOpeners) {
@@ -272,13 +361,15 @@ function countOpeningBlocks(line: string, nextLine: string): number {
     }
     
     // Lines ending with colon (Python, YAML, etc.) - but not comments or URLs
+    // Exclude markdown headers (###) and list items
     if (line.endsWith(":") && 
         !line.startsWith("//") && 
         !line.startsWith("#") && 
         !line.startsWith("*") && 
         !line.match(/^[\s]*\/\//) && 
         !line.match(/https?:/) &&
-        !line.match(/^[\s]*\*/)) {
+        !line.match(/^[\s]*\*/) &&
+        !line.match(/^#{1,6}\s/)) { // Exclude markdown headers
         // Only increase if next line is not empty and not a closing tag
         if (nextLine && nextLine.trim()) {
             const nextClosing = countClosingBlocks(nextLine);
