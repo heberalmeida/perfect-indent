@@ -4,65 +4,47 @@ A smarter indentation fixer for Visual Studio Code.
 
 Perfect Indent analyzes your code structure and automatically corrects broken indentation for ANY language.
 
-![Perfect Indent](src/image/perfect-ident.png)
+![Perfect Indent](src/image/perfect-indent.png)
 
-## ⭐ Features
+## Features
 
-- ✅ Fix indentation with one command  
-- ✅ Detects tab/spaces automatically  
-- ✅ Works with **30+ languages** including HTML, JS, TS, Vue, React, PHP, Python, JSON, CSS, YAML, XML, and more  
-- ✅ Smart block-based indentation  
-- ✅ Multiple keyboard shortcuts  
-- ✅ Context menu integration  
-- ✅ Works from file tabs (no need to click inside code)  
-- ✅ Special handling for Markdown files  
-- ✅ Ultra lightweight (no dependencies)
+- Fix indentation with one command  
 
-## 🚀 Usage
+- Detects tab/spaces automatically  
 
-### Keyboard Shortcuts
+- Works with **30+ languages** including HTML, JS, TS, Vue, React, PHP, Python, JSON, CSS, YAML, XML, and more  
 
-You have **two options**:
+- Smart block-based indentation  
 
-1. **Primary shortcut:**
-   - **Ctrl + Shift + I** (Windows/Linux)  
-   - **Cmd + Shift + I** (macOS)
+- Keyboard shortcut included  
 
-2. **Alternative shortcut:**
-   - **Alt + Shift + I** (All platforms)
+- Ultra lightweight (no dependencies)
 
-### Context Menu
+## Usage
 
-Right-click on any file to access Perfect Indent:
+Press:
 
-- **File Explorer**: Right-click on file → **Perfect Indent**
-- **Editor Tab**: Right-click on file tab → **Perfect Indent**
-- **Code Editor**: Right-click inside code → **Perfect Indent**
+- **Ctrl + Shift + I** (Windows/Linux)  
 
-### Command Palette
+- **Cmd + Shift + I** (macOS)
 
-1. Press `Ctrl/Cmd + Shift + P`
-2. Type: **Perfect Indent**
-3. Select: **Perfect Indent: Fix indentation**
+or run:
 
-### Works Everywhere
+**Perfect Indent: Fix indentation**
 
-- ✅ Click on file tab and press shortcut
-- ✅ Right-click on file in explorer
-- ✅ Right-click inside code editor
-- ✅ Use Command Palette
-- ✅ Works even without clicking inside the code!
+## Perfect for
 
-## 💡 Perfect for
+- Messy pasted code  
 
-- **Messy pasted code** - Clean up code copied from different sources
-- **Minified → reformatted** - Make minified code readable again
-- **HTML/Blade/Vue/JSX components** - Fix nested HTML structures
-- **Python blocks** - Correct Python indentation automatically
-- **Legacy files** - Fix old files with inconsistent indentation
-- **Quick fixes** - No need to manually fix indentation anymore
+- Minified → reformatted  
 
-## 🌐 Supported Languages
+- HTML/Blade/Vue/JSX components  
+
+- Python blocks  
+
+- Legacy files
+
+    ## Supported Languages
 
 Perfect Indent works with any language that uses block-based indentation:
 
@@ -85,8 +67,6 @@ Perfect Indent works with any language that uses block-based indentation:
 - **Java** (`.java`)
 - **C/C++** (`.c`, `.cpp`, `.h`)
 - **C#** (`.cs`)
-- **Kotlin** (`.kt`)
-- **Swift** (`.swift`)
 
 ### Configuration & Data
 - **YAML** (`.yaml`, `.yml`)
@@ -105,106 +85,37 @@ Perfect Indent works with any language that uses block-based indentation:
 - **SQL** (`.sql`)
 - **Lua** (`.lua`)
 - **Perl** (`.pl`)
+- **Swift** (`.swift`)
+- **Kotlin** (`.kt`)
 - And many more!
 
-## 🎯 How It Works
+## Roadmap
 
-Perfect Indent uses intelligent block-based detection to understand your code structure:
+### v1.0
 
-1. **Detects indentation style** - Automatically identifies tabs vs spaces and indent size (2 or 4 spaces)
-2. **Analyzes code blocks** - Recognizes opening/closing blocks: `{}`, `[]`, `()`, HTML tags, keywords
-3. **Fixes indentation** - Applies correct indentation level based on block nesting
-4. **Prevents loops** - Smart comparison ensures it won't indent infinitely
-5. **Preserves structure** - Maintains empty lines and code structure
+✔ Fix básico por blocos
 
-## 📝 Special Features
+✔ Detectar indent
 
-### Markdown Support
-- Special handling for Markdown files
-- Preserves list indentation
-- Prevents infinite loops
-- Minimal indentation changes
+✔ Comando atalho
 
-### HTML/XML Support
-- Detects HTML tags with attributes
-- Handles self-closing tags correctly
-- Works with Vue, Angular, and React templates
-- Proper nesting detection
+### v1.1
 
-### Multi-Language
-- Works with any language that uses block-based indentation
-- No language-specific configuration needed
-- Automatic detection and formatting
+⬜ Ativar "Fix on Save"
 
-## 🛠️ Roadmap
+⬜ Configurações no VS Code
 
-### v1.0 ✅
+⬜ Suporte especial para Python
 
-✔ Fix básico por blocos  
-✔ Detectar indent  
-✔ Comando atalho  
-✔ Context menu integration  
-✔ Multiple keyboard shortcuts  
-✔ HTML/XML support  
-✔ Markdown special handling  
+### v1.2
 
-### v1.1 (Planned)
+⬜ Indentação inteligente por AST (análise da estrutura)
 
-⬜ Ativar "Fix on Save"  
-⬜ Configurações no VS Code  
-⬜ Suporte especial para Python  
-⬜ Custom indent size configuration  
+### v2.0
 
-### v1.2 (Planned)
+⬜ "AI Indent Helper" (opcional, offline ou com IA local)
 
-⬜ Indentação inteligente por AST (análise da estrutura)  
-⬜ Better handling of complex nested structures  
-
-### v2.0 (Future)
-
-⬜ "AI Indent Helper" (opcional, offline ou com IA local)  
-⬜ Corrigir indentação por seleção  
-⬜ Batch processing multiple files  
-
-## 📦 Installation
-
-### From VS Code Marketplace
-1. Open VS Code
-2. Go to Extensions (`Ctrl/Cmd + Shift + X`)
-3. Search for "Perfect Indent"
-4. Click Install
-
-### From VSIX File
-1. Download `perfect-indent-0.0.1.vsix`
-2. Open VS Code
-3. Go to Extensions
-4. Click "..." menu → "Install from VSIX..."
-5. Select the downloaded file
-
-## 🐛 Troubleshooting
-
-**Q: The menu doesn't appear?**  
-A: Reload VS Code window: `Ctrl/Cmd + Shift + P` → `Developer: Reload Window`
-
-**Q: Indentation not working?**  
-A: Make sure the file is saved (not "Untitled"). The extension works best with saved files.
-
-**Q: Markdown files causing issues?**  
-A: Markdown has special handling. If you encounter problems, try saving the file first.
-
-**Q: HTML not indenting correctly?**  
-A: Make sure HTML tags are properly formatted. The extension detects opening/closing tags automatically.
-
-## 📄 License
-
-MIT License - See [LICENSE](LICENSE) file for details.
-
-## 👤 Author
-
-Heber Almeida
-
-- GitHub: [@heberalmeida](https://github.com/heberalmeida)
-- Repository: [perfect-indent](https://github.com/heberalmeida/perfect-indent)
+⬜ Corrigir indentação por seleção
 
 ---
 
